@@ -1,0 +1,50 @@
+{
+    "name": "Gist Beautify",
+    "version": "0.1.0",
+    "manifest_version": 2,
+    "description": "Beautify code on gist",
+    "minimum_chrome_version": "14",
+    "offline_enabled": true,
+
+    "icons": {
+        "16": "images/gist-beautify-16.png",
+        "48": "images/gist-beautify-48.png",
+        "128": "images/gist-beautify-128.png",
+        "256": "images/gist-beautify-256.png"
+    },
+
+    "web_accessible_resources": [
+        "images/gist-beautify-48.png"
+    ],
+
+    "permissions": [
+        "tabs",
+        "notifications"
+    ],
+
+    "background": {
+        "scripts": [
+            "scripts/background.js",
+            "scripts/lib/beautify.js",
+            "scripts/lib/beautify-css.js",
+            "scripts/lib/beautify-html.js"
+        ]
+    },
+
+    "browser_action": {
+        "default_icon": "images/gist-beautify-19.png",
+        "default_title": "Gist Beautify"
+    },
+
+    "content_scripts": [{
+        "matches": [
+            "https://app.gistboxapp.com/*",
+            "https://gist.github.com/*/edit"
+        ],
+        "all_frames": true,
+        "js": [
+            "scripts/lib/jquery-1.9.1.min.js",
+            "scripts/content_script.js"
+        ]
+    }]
+}
