@@ -1,0 +1,7 @@
+.octo-linker {
+    cursor: pointer;
+}
+
+.octo-linker:hover {
+    text-decoration: underline;
+}

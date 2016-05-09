@@ -43,7 +43,6 @@
         ],
         "all_frames": true,
         "js": [
-            "scripts/lib/jquery-1.9.1.min.js",
             "scripts/content_script.js"
         ]
     }]
