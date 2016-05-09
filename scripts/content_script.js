@@ -1,32 +1,30 @@
 (function(global) {
-    /*var host = global.location.host;
-    if (host !== "gist.github.com") {
-        console.warn("wrong place!");
-        return;
-    }*/
     var beautifyingGist = null,
         beautifyInProcess = false,
-        copiedInformerTimer = null,
-        ace_editor = $('.ace_editor');
+        copiedInformTimer = null,
+        beautifyBtn = null,
+        copiedInform = null,
+        body = document.querySelector('body');
 
-    if (!ace_editor && !ace_editor.length) {
-        console.warn("Not Ace editor to prettify! I quit!!");
-        return;
-    }
+    var createInformer = function(msg) {
+            if (typeof msg !== 'string' || msg.length <= 0) {
+                console.warn('[createInformer] not msg to inform.');
+                return;
+            }
+            
+            var copiedInform = document.createElement('div');
+                copiedInform.innerText = msg;
+                copiedInform.className = 'copiedInform';
+                copiedInform.style.position = 'absolute';
+                copiedInform.style.font = '20px / 1.5 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
+                copiedInform.style.fontWeight = 'bold';
+                copiedInform.style.top = '100px';
+                copiedInform.style.width = '100%';
+                copiedInform.style.textAlign = 'center';
+                copiedInform.style.zIndex = 100;
+                copiedInform.style.color = '#39c';
 
-    var getCopiedInformer = function() {
-            var copiedInformer = document.createElement('div');
-            copiedInformer.innerText = 'Beautified gist Copied! Select All and Paste it.';
-            copiedInformer.className = 'copiedInformer';
-            copiedInformer.style.position = 'absolute';
-            copiedInformer.style.font = '16px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
-            copiedInformer.style.fontWeight = 'bold';
-            copiedInformer.style.top = '36px';
-            copiedInformer.style.right = '20px';
-            copiedInformer.style.zIndex = 1;
-            copiedInformer.style.color = '#39c';
-
-            return copiedInformer;
+            return copiedInform;
         },
 
         getNewBeautifyBtn = function() {
@@ -34,20 +32,40 @@
             beautifyBtn.innerText = 'Beautify gist';
             beautifyBtn.className = 'btn gist-beautify';
             beautifyBtn.style.position = 'absolute';
-            beautifyBtn.style.font = '13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
-            beautifyBtn.style.top = '-1px';
-            beautifyBtn.style.right = '18px';
-            beautifyBtn.style.zIndex = 1;
+            beautifyBtn.style.font = '16px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
+            beautifyBtn.style.top = '100px';
+            beautifyBtn.style.left = '500px';
+            beautifyBtn.style.zIndex = 100;
             beautifyBtn.style.color = '#333';
 
             return beautifyBtn;
         },
 
-        beautifyBtnClickHandler = function(editor) {
-            if (!editor) {
-                console.warn('[beautifyBtnClickHandler] not editor parent provided!');
+        appendBeautifyBtn = function() {
+            beautifyBtn = getNewBeautifyBtn();
+            beautifyBtn.addEventListener("click", beautifyBtnClickHandler, true);
+
+            body.appendChild(beautifyBtn);
+        },
+
+        appendCopiedInform = function() {
+            copiedInform = createInformer('Beautified gist Copied!  Paste it to where you want :)');
+            body.appendChild(copiedInform);
+        },
+
+        addCopiedInformTimer = function() {
+            copiedInformTimer = global.setTimeout(function() {
+                clearCopiedInform();
+                clearCopiedInformTimer();
+            }, 2000);
+        },
+
+        beautifyBtnClickHandler = function() {
+            if (!beautifyingGist) {
+                console.warn('[beautifyBtnClickHandler] not valid beautifyingGist.');
                 return;
             }
+
             if (beautifyInProcess) {
                 console.warn('[beautifyBtnClickHandler] beautify In Process, try again later.');
                 return;
@@ -55,46 +73,62 @@
 
             beautifyInProcess = true;
 
-            beautifyingGist = editor.find('.ace_text-layer');
-
-            if (!beautifyingGist || !beautifyingGist.length) {
-                console.warn("[beautifyBtnClickHandler] fail to find the gist!");
-                return;
-            }
-
-            chrome.extension.sendMessage({ input: beautifyingGist[0].innerText }, function(response) {
-                // put beautified output in clipboard.
+            chrome.extension.sendMessage({ input: beautifyingGist }, function(response) {
+                // Put beautified output in clipboard
                 document.addEventListener('copy', function(e) {
                     e.clipboardData.setData('text/plain', response.output);
                     e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
                 });
                 document.execCommand('copy');
 
-                if (!copiedInformerTimer) {
-                    var copiedInformer = getCopiedInformer();
-                    beautifyingGist[0].appendChild(copiedInformer);
-                
-                    var copiedInformerTimer = setTimeout(function(){
-                        beautifyingGist[0].removeChild(copiedInformer);
-                        clearTimeout(copiedInformerTimer);
-                        copiedInformerTimer = null;
-                    }, 2000);
+                // Send success message
+                if (!copiedInformTimer) {
+                    clearBeautifyBtn();
+                    appendCopiedInform();
+                    addCopiedInformTimer();
                 }
 
                 beautifyInProcess = false;
             });
+        },
+
+        clearBeautifyBtn = function() {
+            if (beautifyBtn) {
+                beautifyBtn.removeEventListener("click", beautifyBtnClickHandler, true);
+                body.removeChild(beautifyBtn);
+                beautifyBtn = null;
+            }
+        },
+
+        clearCopiedInform = function() {
+            if (copiedInform) {
+                body.removeChild(copiedInform);
+                copiedInform = null;
+            }
+        },
+
+        clearCopiedInformTimer = function() {
+            if (copiedInformTimer) {
+                global.clearTimeout(copiedInformTimer);
+                copiedInformTimer = null;
+            }
         };
 
-    var prepareBeautifyBtns = (function() {
-        ace_editor.each(function(index) {
-            var beautifyBtn = getNewBeautifyBtn();
-            beautifyBtn.addEventListener("click", function() {
-                beautifyBtnClickHandler($(this).parent());
-            }, true);
+    // get gist from clipboard after Ctrl+A and Ctrl+C
+    document.addEventListener('copy', function(e) {
+        if (beautifyingGist) {
+            // skip if it's the copy event of beautified codes
+            return;
+        }
 
-            $(this).append(beautifyBtn);
-        });
-    })();
+        beautifyingGist = e.clipboardData.getData('text/plain');
+        if (typeof beautifyingGist !== 'string' || beautifyingGist.length <= 0) {
+            createInformer("No contents copied to be beautified :(");
+            return;
+        }
 
+        appendBeautifyBtn();
+        e.preventDefault();
+    });
 
 })(window);
