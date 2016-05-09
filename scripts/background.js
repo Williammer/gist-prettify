@@ -15,26 +15,25 @@ function looks_like_html(source) {
 }
 
 function beautify(input) {
-    function isTrue(storageId) {
-        return localStorage[storageId] === 'on';
-    }
-
     var opts = {};
 
-    opts.indent_size = localStorage['tabsize'];
+    // function isTrue(storageId) {
+    //     return localStorage[storageId] === 'on';
+    // }
+    
+    // opts.indent_size = localStorage['tabsize'];
+    // opts.indent_scripts = localStorage['indent-scripts'];
+    // opts.brace_style = localStorage['brace-style'];
+    // opts.preserve_newlines = isTrue('preserve-newlines');
+    // opts.keep_array_indentation = isTrue('keep-array-indentation');
+    // opts.break_chained_methods = isTrue('break-chained-methods');
+    // opts.space_before_conditional = isTrue('space-before-conditional');
+    // opts.unescape_strings = isTrue('unescape-strings');
+    // opts.max_preserve_newlines = (isTrue('limit-preserve-newlines')) ? localStorage['max-preserve-newlines'] : false;
+    
     opts.indent_char = opts.indent_size == 1 ? '\t' : ' ';
-    opts.indent_scripts = localStorage['indent-scripts'];
-    opts.brace_style = localStorage['brace-style'];
-    opts.preserve_newlines = isTrue('preserve-newlines');
-    opts.keep_array_indentation = isTrue('keep-array-indentation');
-    opts.break_chained_methods = isTrue('break-chained-methods');
-    opts.space_before_conditional = isTrue('space-before-conditional');
-    opts.unescape_strings = isTrue('unescape-strings');
     opts.space_after_anon_function = true;
     opts.e4x = true;
-
-    if (isTrue('limit-preserve-newlines'))
-        opts.max_preserve_newlines = localStorage['max-preserve-newlines'];
 
     if (looks_like_html(input)) {
         return style_html(input, opts);
@@ -43,25 +42,22 @@ function beautify(input) {
     return js_beautify(input, opts);
 }
 
-(function init() {
-    chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-        if (!request.input) {
-        	console.warn("[background] No outputs!");
-        	return;
-        }
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+    if (!request.input) {
+        console.warn("[background] No outputs!");
+        return;
+    }
 
-        if (beautify_in_progress) {
-            console.warn("[background] beautify in progress !");
-            return;
-        }
+    if (beautify_in_progress) {
+        console.warn("[background] beautify in progress !");
+        return;
+    }
 
-        beautify_in_progress = true;
+    beautify_in_progress = true;
 
-        output = beautify(request.input);
+    output = beautify(request.input);
 
-        beautify_in_progress = false;
+    beautify_in_progress = false;
 
-        sendResponse({ output: output });
-    });
-
-})();
+    sendResponse({ output: output });
+});
