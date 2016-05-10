@@ -1,5 +1,5 @@
 {
-    "name": "Gist Beautify",
+    "name": "Copy-Beautify-Paste",
     "version": "0.1.0",
     "manifest_version": 2,
     "description": "Beautify code on gist",
@@ -33,7 +33,7 @@
 
     "browser_action": {
         "default_icon": "images/gist-beautify-19.png",
-        "default_title": "Gist Beautify"
+        "default_title": "Copy-Beautify-Paste"
     },
 
     "content_scripts": [{
