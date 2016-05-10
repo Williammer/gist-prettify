@@ -121,7 +121,8 @@
 
     // get gist from clipboard after Ctrl+A and Ctrl+C
     document.addEventListener('copy', function(e) {
-        if (beautifyingGist) {
+        if (beautifyInProcess) {
+            // console.warn("In the process of beautify...");
             // skip if it's the copy event of beautified codes
             return;
         }
