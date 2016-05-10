@@ -73,23 +73,28 @@
 
             beautifyInProcess = true;
 
-            chrome.extension.sendMessage({ input: beautifyingGist }, function(response) {
-                // Put beautified output in clipboard
-                document.addEventListener('copy', function(e) {
-                    e.clipboardData.setData('text/plain', response.output);
-                    e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
+            try {
+                chrome.extension.sendMessage({ input: beautifyingGist }, function(response) {
+                    // Put beautified output in clipboard
+                    document.addEventListener('copy', function(e) {
+                        e.clipboardData.setData('text/plain', response.output);
+                        e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
+                    });
+                    document.execCommand('copy');
+
+                    // Send success message
+                    if (!copiedInformTimer) {
+                        clearBeautifyBtn();
+                        appendInformer('Beautified gist Copied!  Paste it to where you want :)');
+                    }
+
+                    beautifyInProcess = false;
                 });
-                document.execCommand('copy');
-
-                // Send success message
-                if (!copiedInformTimer) {
-                    clearBeautifyBtn();
-                    appendCopiedInform();
-                    addCopiedInformTimer();
-                }
-
+            } catch (e){
+                console.error("[beautify] error: "+e);
+                appendInformer('Has error in the beautify process, please try again :(');
                 beautifyInProcess = false;
-            });
+            }
         },
 
         clearBeautifyBtn = function() {
