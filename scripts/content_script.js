@@ -48,12 +48,18 @@
             body.appendChild(beautifyBtn);
         },
 
-        appendCopiedInform = function() {
-            copiedInform = createInformer('Beautified gist Copied!  Paste it to where you want :)');
+        appendInformer = function(msg) {
+            if (typeof msg !== 'string' || msg.length <= 0) {
+                console.warn('[appendInformer] not msg to inform.');
+                return;
+            }
+
+            copiedInform = createInformer(msg);
             body.appendChild(copiedInform);
+            addInformTimer();
         },
 
-        addCopiedInformTimer = function() {
+        addInformTimer = function() {
             copiedInformTimer = global.setTimeout(function() {
                 clearCopiedInform();
                 clearCopiedInformTimer();
@@ -119,7 +125,7 @@
             }
         };
 
-    // get gist from clipboard after Ctrl+A and Ctrl+C
+    // get gist from clipboard after Ctrl+C
     document.addEventListener('copy', function(e) {
         if (beautifyInProcess) {
             // console.warn("In the process of beautify...");
