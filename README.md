@@ -1,2 +1,3 @@
 # gist-prettify
+master -- undergoing...
 chrome extension serving to prettify the gist code online
