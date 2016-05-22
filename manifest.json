@@ -1,8 +1,8 @@
 {
-    "name": "Copy-Prettify-Paste",
+    "name": "Gist-prettify",
     "version": "0.9.0",
     "manifest_version": 2,
-    "description": "Prettify your gist",
+    "description": "Prettify your gist on popular gist website such as gist.github.com and app.gistboxapp.com",
     "minimum_chrome_version": "14",
     "offline_enabled": true,
 
