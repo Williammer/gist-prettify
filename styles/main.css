@@ -31,6 +31,8 @@ body.beautify-notice {
     cursor: pointer;
     top: 4px;
     position: absolute;
+    line-height: 1.4;
+    color: #333;
 }
 .btfy-header .close-btn:hover {
     font-weight: bold;
