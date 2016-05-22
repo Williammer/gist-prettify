@@ -14,7 +14,8 @@
     },
 
     "web_accessible_resources": [
-        "images/gist-beautify-48.png"
+        "images/gist-beautify-48.png",
+        "styles/main.css"
     ],
 
     "permissions": [
@@ -43,6 +44,7 @@
             "https://gist.github.com/*/edit"
         ],
         "all_frames": true,
+        "css": ["styles/main.css"],
         "js": [
             "scripts/content_script.js"
         ]
