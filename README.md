@@ -9,14 +9,14 @@ To solve this problem, I've developed this chrome extension serving to beautify 
 3. Select the code inside the editor that your want to beautify, Copy it, then a banner with a button should be showing.
 4. Click the button then you will have your code beautified and copied, you can Paste it to wherever you want.
 
-## Supported languages
+### Supported languages
 * javaScript
 * html
 * css
 
 more languages will be added in future...
 
-## Supported websites
+### Supported websites
 1. [gist.github.com](https://gist.github.com/) under editing mode.
 2. [app.gistboxapp.com](https://app.gistboxapp.com/) under editing mode.
 
