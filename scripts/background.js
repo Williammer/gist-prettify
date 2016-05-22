@@ -2,6 +2,8 @@
  * background tasks to perform code beautify on gist
  * @dep lib/beautify.js, lib/beautify-css.js, lib/beautify-html.js
  */
+'use strict';
+
 var beautify_in_progress = false,
     output;
 
@@ -20,7 +22,7 @@ function beautify(input) {
     // function isTrue(storageId) {
     //     return localStorage[storageId] === 'on';
     // }
-    
+
     // opts.indent_size = localStorage['tabsize'];
     // opts.indent_scripts = localStorage['indent-scripts'];
     // opts.brace_style = localStorage['brace-style'];
@@ -30,7 +32,7 @@ function beautify(input) {
     // opts.space_before_conditional = isTrue('space-before-conditional');
     // opts.unescape_strings = isTrue('unescape-strings');
     // opts.max_preserve_newlines = (isTrue('limit-preserve-newlines')) ? localStorage['max-preserve-newlines'] : false;
-    
+
     opts.indent_char = opts.indent_size == 1 ? '\t' : ' ';
     opts.space_after_anon_function = true;
     opts.e4x = true;
@@ -54,9 +56,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     }
 
     beautify_in_progress = true;
-
     output = beautify(request.input);
-
     beautify_in_progress = false;
 
     sendResponse({ output: output });

@@ -1,4 +1,6 @@
 (function(global) {
+    'use strict';
+
     var beautifyingGist = null,
         beautifyInProcess = false,
         copiedInformTimer = null,
@@ -11,18 +13,18 @@
                 console.warn('[createInformer] not msg to inform.');
                 return;
             }
-            
+
             var copiedInform = document.createElement('div');
-                copiedInform.innerText = msg;
-                copiedInform.className = 'copiedInform';
-                copiedInform.style.position = 'absolute';
-                copiedInform.style.font = '20px / 1.5 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
-                copiedInform.style.fontWeight = 'bold';
-                copiedInform.style.top = '100px';
-                copiedInform.style.width = '100%';
-                copiedInform.style.textAlign = 'center';
-                copiedInform.style.zIndex = 100;
-                copiedInform.style.color = '#39c';
+            copiedInform.innerText = msg;
+            copiedInform.className = 'copiedInform';
+            copiedInform.style.position = 'absolute';
+            copiedInform.style.font = '20px / 1.5 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
+            copiedInform.style.fontWeight = 'bold';
+            copiedInform.style.top = '100px';
+            copiedInform.style.width = '100%';
+            copiedInform.style.textAlign = 'center';
+            copiedInform.style.zIndex = 100;
+            copiedInform.style.color = '#39c';
 
             return copiedInform;
         },
@@ -96,8 +98,8 @@
 
                     beautifyInProcess = false;
                 });
-            } catch (e){
-                console.error("[beautify] error: "+e);
+            } catch (e) {
+                console.error("[beautify] error: " + e);
                 appendInformer('Has error in the beautify process, please try again :(');
                 beautifyInProcess = false;
             }
