@@ -5,9 +5,11 @@
         beautifyInProcess = false,
         copiedInformTimer = null,
         beautifyBtn = null,
+        beautifyBtnContainer = null,
         copiedInform = null,
         body = document.querySelector('body');
 
+        // create
     var createInformer = function(msg) {
             if (typeof msg !== 'string' || msg.length <= 0) {
                 console.warn('[createInformer] not msg to inform.');
@@ -16,56 +18,89 @@
 
             var copiedInform = document.createElement('div');
             copiedInform.innerText = msg;
-            copiedInform.className = 'copiedInform';
-            copiedInform.style.position = 'absolute';
-            copiedInform.style.font = '20px / 1.5 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
-            copiedInform.style.fontWeight = 'bold';
-            copiedInform.style.top = '100px';
-            copiedInform.style.width = '100%';
-            copiedInform.style.textAlign = 'center';
-            copiedInform.style.zIndex = 100;
-            copiedInform.style.color = '#39c';
+            copiedInform.className = 'informer';
 
             return copiedInform;
         },
+        createBeautifyBtnContainer = function() {
+            var beautifyBtnContainer = document.createElement('div');
 
-        getNewBeautifyBtn = function() {
+            beautifyBtnContainer.className = 'btfy-btn-container';
+
+            return beautifyBtnContainer;
+        },
+        createBeautifyBtn = function() {
             var beautifyBtn = document.createElement('div');
-            beautifyBtn.innerText = 'Beautify gist';
-            beautifyBtn.className = 'btn gist-beautify';
-            beautifyBtn.style.position = 'absolute';
-            beautifyBtn.style.font = '16px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
-            beautifyBtn.style.top = '100px';
-            beautifyBtn.style.left = '500px';
-            beautifyBtn.style.zIndex = 100;
-            beautifyBtn.style.color = '#333';
+
+            beautifyBtn.innerText = 'Beautify your copied gist';
+            beautifyBtn.className = 'btn btfy-btn';
 
             return beautifyBtn;
         },
-
-        appendBeautifyBtn = function() {
-            beautifyBtn = getNewBeautifyBtn();
+        showBeautifyBtn = function() {
+            beautifyBtn = createBeautifyBtn();
             beautifyBtn.addEventListener("click", beautifyBtnClickHandler, true);
 
-            body.appendChild(beautifyBtn);
-        },
+            beautifyBtnContainer = createBeautifyBtnContainer();
+            beautifyBtnContainer.appendChild(beautifyBtn);
 
-        appendInformer = function(msg) {
+            body.className = "beautify-notice";
+            body.appendChild(beautifyBtnContainer);
+        },
+        showInformer = function(msg) {
             if (typeof msg !== 'string' || msg.length <= 0) {
-                console.warn('[appendInformer] not msg to inform.');
+                console.warn('[showInformer] not msg to inform.');
                 return;
             }
 
             copiedInform = createInformer(msg);
-            body.appendChild(copiedInform);
+
+            if (!beautifyBtnContainer) {
+                beautifyBtnContainer = createBeautifyBtnContainer();
+            }
+            beautifyBtnContainer.appendChild(copiedInform);
+
+            body.className = "beautify-notice";
+            body.appendChild(beautifyBtnContainer);
+
             addInformTimer();
         },
-
         addInformTimer = function() {
             copiedInformTimer = global.setTimeout(function() {
                 clearCopiedInform();
                 clearCopiedInformTimer();
-            }, 2000);
+            }, 3000);
+        },
+        // remove
+        clearBeautifyBtnContainer = function() {
+            if (!beautifyBtnContainer) {
+                console.warn("no container to clear.");
+                return;
+            }
+
+            body.removeChild(beautifyBtnContainer);
+            body.className = "";
+            beautifyBtnContainer = null;
+        },
+        clearBeautifyBtn = function() {
+            if (beautifyBtn) {
+                beautifyBtn.removeEventListener("click", beautifyBtnClickHandler, true);
+
+                clearBeautifyBtnContainer();
+                beautifyBtn = null;
+            }
+        },
+        clearCopiedInform = function() {
+            if (copiedInform) {
+                clearBeautifyBtnContainer();
+                copiedInform = null;
+            }
+        },
+        clearCopiedInformTimer = function() {
+            if (copiedInformTimer) {
+                global.clearTimeout(copiedInformTimer);
+                copiedInformTimer = null;
+            }
         },
 
         beautifyBtnClickHandler = function() {
@@ -73,7 +108,6 @@
                 console.warn('[beautifyBtnClickHandler] not valid beautifyingGist.');
                 return;
             }
-
             if (beautifyInProcess) {
                 console.warn('[beautifyBtnClickHandler] beautify In Process, try again later.');
                 return;
@@ -93,55 +127,35 @@
                     // Send success message
                     if (!copiedInformTimer) {
                         clearBeautifyBtn();
-                        appendInformer('Beautified gist Copied!  Paste it to where you want :)');
+                        showInformer('Beautified gist Copied!  Paste it to where you want :)');
                     }
 
                     beautifyInProcess = false;
                 });
             } catch (e) {
                 console.error("[beautify] error: " + e);
-                appendInformer('Has error in the beautify process, please try again :(');
+                showInformer('Has error in the beautify process, please try again :(');
                 beautifyInProcess = false;
             }
-        },
-
-        clearBeautifyBtn = function() {
-            if (beautifyBtn) {
-                beautifyBtn.removeEventListener("click", beautifyBtnClickHandler, true);
-                body.removeChild(beautifyBtn);
-                beautifyBtn = null;
-            }
-        },
-
-        clearCopiedInform = function() {
-            if (copiedInform) {
-                body.removeChild(copiedInform);
-                copiedInform = null;
-            }
-        },
-
-        clearCopiedInformTimer = function() {
-            if (copiedInformTimer) {
-                global.clearTimeout(copiedInformTimer);
-                copiedInformTimer = null;
-            }
         };
+
+
 
     // get gist from clipboard after Ctrl+C
     document.addEventListener('copy', function(e) {
         if (beautifyInProcess) {
-            // console.warn("In the process of beautify...");
+            console.warn("In the process of beautify...");
             // skip if it's the copy event of beautified codes
             return;
         }
 
         beautifyingGist = e.clipboardData.getData('text/plain');
         if (typeof beautifyingGist !== 'string' || beautifyingGist.length <= 0) {
-            createInformer("No contents copied to be beautified :(");
+            showInformer("No contents copied to be beautified :(");
             return;
         }
 
-        appendBeautifyBtn();
+        showBeautifyBtn();
         e.preventDefault();
     });
 
