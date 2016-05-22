@@ -1,8 +1,8 @@
 {
-    "name": "Copy-Beautify-Paste",
+    "name": "Copy-Prettify-Paste",
     "version": "0.9.0",
     "manifest_version": 2,
-    "description": "Beautify code on gist",
+    "description": "Prettify your gist",
     "minimum_chrome_version": "14",
     "offline_enabled": true,
 
@@ -35,7 +35,7 @@
 
     "browser_action": {
         "default_icon": "images/gist-beautify-19.png",
-        "default_title": "Copy-Beautify-Paste"
+        "default_title": "Copy-Prettify-Paste"
     },
 
     "content_scripts": [{
