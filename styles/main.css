@@ -11,7 +11,7 @@ body.beautify-notice {
     font-family: Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-.btfy-btn-container {
+.btfy-header {
     position: fixed;
     top: 0px;
     left: 0px;
@@ -20,18 +20,31 @@ body.beautify-notice {
     background: #DDD2FB;
     border: 1px solid #D0C3D2;
     z-index: 100;
- 	text-align: center;
+    text-align: center;
     font-weight: bold;
 }
 
-.btfy-btn-container .btfy-btn {
+.btfy-header .close-btn {
+    font-size: 18px;
+    font-weight: normal;
+    right: 10px;
+    cursor: pointer;
+    top: 4px;
+    position: absolute;
+}
+.btfy-header .close-btn:hover {
+    font-weight: bold;
+}
+
+.btfy-header .btfy-btn {
     margin-top: 5px;
     color: #333;
     font-size: 14px;
     line-height: 1;
 }
+
 /* github btn style */
-.btfy-btn-container .btn {
+.btfy-header .btn {
     position: relative;
     display: inline-block;
     padding: 6px 12px;
@@ -51,7 +64,7 @@ body.beautify-notice {
     -webkit-appearance: none;
 }
 
-.btfy-btn-container .informer {
+.btfy-header .informer {
     font-size: 16px;
     line-height: 40px;
     color: #444;
