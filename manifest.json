@@ -1,6 +1,6 @@
 {
     "name": "Copy-Beautify-Paste",
-    "version": "0.1.0",
+    "version": "0.9.0",
     "manifest_version": 2,
     "description": "Beautify code on gist",
     "minimum_chrome_version": "14",
