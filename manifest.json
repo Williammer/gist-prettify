@@ -24,6 +24,7 @@
 
     "background": {
         "scripts": [
+            "scripts/chromereload.js",
             "scripts/background.js",
             "scripts/lib/beautify.js",
             "scripts/lib/beautify-css.js",
