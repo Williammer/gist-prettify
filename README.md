@@ -17,9 +17,8 @@ To solve this problem, I've developed this chrome extension serving to beautify 
 more languages will be added in future...
 
 ## Supported websites
-[gist.github.com](https://gist.github.com/) under editing.
-
-[app.gistboxapp.com](https://app.gistboxapp.com/) under editing.
+1. [gist.github.com](https://gist.github.com/) under editing mode.
+2. [app.gistboxapp.com](https://app.gistboxapp.com/) under editing mode.
 
 more websites will be added in future...
 
