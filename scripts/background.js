@@ -38,7 +38,7 @@ function beautify(input) {
     opts.e4x = true;
 
     if (looks_like_html(input)) {
-        return style_html(input, opts);
+        return html_beautify(input, opts);
     }
 
     return js_beautify(input, opts);
